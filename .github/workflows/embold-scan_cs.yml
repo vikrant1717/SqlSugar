@@ -44,4 +44,4 @@ jobs:
         curl --silent --location --request GET "http://3.66.212.6:3000/api/v1/repositories/f7ff16ec7d97cb0b668b2740d10edf62/scans/config/download" --header "Authorization:Bearer ${{ secrets.EMBOLD_SCAN_TOKEN_CS}}" -o repository-configuration.json
         echo "Download repository configuration file done"
         # Step 3: Run scan using the 'analyse' command
-        ./browserstack-codequality-scanner/bin/embold-scanner analyse -u http://3.66.212.6:3000 -t $EMBOLD_SCAN_TOKEN_CS -r f7ff16ec7d97cb0b668b2740d10edf62 -b . -d ./embold-data -c ./repository-configuration.json -l ./embold-log -sh $GITHUB_WORKSPACE/embold-scanner-home -v
+        ./browserstack-codequality-scanner/bin/embold-scanner analyse -u http://3.66.212.6:3000 -t ${{ secrets.EMBOLD_SCAN_TOKEN_CS }} -r f7ff16ec7d97cb0b668b2740d10edf62 -b . -d ./embold-data -c ./repository-configuration.json -l ./embold-log -sh $GITHUB_WORKSPACE/embold-scanner-home -v

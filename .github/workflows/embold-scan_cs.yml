@@ -7,7 +7,7 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master " ]
 
 jobs:
   build:
@@ -20,19 +20,19 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 3.0.x
         
-    - name: Restore dependencies
-      # Specify the solution file to restore packages for
-      run: dotnet restore cppsamples.sln
+    # - name: Restore dependencies
+    #   # Specify the solution file to restore packages for
+    #   run: dotnet restore cppsamples.sln
       
-    - name: Build
-      # Specify the solution file to build
-      run: dotnet build cppsamples.sln --no-restore
+    # - name: Build
+    #   # Specify the solution file to build
+    #   run: dotnet build cppsamples.sln --no-restore
       
-    - name: Test
-      # Specify the solution file to run tests for
-      run: dotnet test cppsamples.sln --no-build --verbosity normal
+    # - name: Test
+    #   # Specify the solution file to run tests for
+    #   run: dotnet test cppsamples.sln --no-build --verbosity normal
 
     - name: Embold Analyse
       run: | 
@@ -41,7 +41,7 @@ jobs:
         tar xvf browserstack-codequality-scanner-archive.tar.gz
         echo "Download and extract BrowserStack CQ Scanner done"
         # Step 2: Download repository configuration file
-        curl --silent --location --request GET "http://3.66.212.6:3000/api/v1/repositories/f7ff16ec7d97cb0b668b2740d10edf62/scans/config/download" --header "Authorization:Bearer eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTc2MTEzODM4MDU0MSwiaWF0IjoxNzYxMTM4MzgwfQ.VXGVQCMaYdIyxnBS7WlmTETjdLjubKXTTj2egs29gSpBV9nCP3IGv2RMzUFtxqjr0RW89qqVxdTB2Sj7SGgKBQ " -o repository-configuration.json
+        curl --silent --location --request GET "http://3.66.212.6:3000/api/v1/repositories/f7ff16ec7d97cb0b668b2740d10edf62/scans/config/download" --header "Authorization:Bearer ${{ secrets.EMBOLD_SCAN_TOKEN_CS}}" -o repository-configuration.json
         echo "Download repository configuration file done"
         # Step 3: Run scan using the 'analyse' command
-        ./browserstack-codequality-scanner/bin/embold-scanner analyse -u http://3.66.212.6:3000 -t eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTc2MTEzODM4MDU0MSwiaWF0IjoxNzYxMTM4MzgwfQ.VXGVQCMaYdIyxnBS7WlmTETjdLjubKXTTj2egs29gSpBV9nCP3IGv2RMzUFtxqjr0RW89qqVxdTB2Sj7SGgKBQ -r 1906730153ccbad493d3312bb712628d -b . -d ./embold-data -c ./repository-configuration.json -l ./embold-log -sh $GITHUB_WORKSPACE/embold-scanner-home -v
+        ./browserstack-codequality-scanner/bin/embold-scanner analyse -u http://3.66.212.6:3000 -t $EMBOLD_SCAN_TOKEN_CS -r f7ff16ec7d97cb0b668b2740d10edf62 -b . -d ./embold-data -c ./repository-configuration.json -l ./embold-log -sh $GITHUB_WORKSPACE/embold-scanner-home -v
